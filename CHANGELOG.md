@@ -7,6 +7,7 @@ v0.2.0 (in development)
   commits)
 - Added an experimental "git-archive" method for determining a version when
   installing from a Git archive
+- Added `typing-extensions` as a dependency on Python versions below 3.8
 
 v0.1.0 (2021-07-08)
 -------------------
