@@ -26,41 +26,38 @@ def get_cmdclasses(
     ``"build_py"``.  All other classes in the input `dict` are passed through
     unchanged.
     """
-
     cmds = {} if bases is None else bases.copy()
 
     sdist_base = cmds.get("sdist", sdist)
 
-    class VersioningitSdist(sdist_base):  # type: ignore[valid-type,misc]
-        def make_release_tree(self, base_dir: str, files: Any) -> None:
-            super().make_release_tree(base_dir, files)
-            init_logging()
-            PROJECT_ROOT = Path().resolve()
-            log.debug("Running onbuild step; cwd=%s", PROJECT_ROOT)
-            run_onbuild(
-                project_dir=PROJECT_ROOT,
-                build_dir=base_dir,
-                is_source=True,
-                version=self.distribution.get_version(),
-            )
-
-    cmds["sdist"] = VersioningitSdist
-
     build_py_base = cmds.get("build_py", build_py)
-
-    class VersioningitBuildPy(build_py_base):  # type: ignore[valid-type,misc]
-        def run(self) -> None:
-            super().run()
-            init_logging()
-            PROJECT_ROOT = Path().resolve()
-            log.debug("Running onbuild step; cwd=%s", PROJECT_ROOT)
-            run_onbuild(
-                project_dir=PROJECT_ROOT,
-                build_dir=self.build_lib,
-                is_source=False,
-                version=self.distribution.get_version(),
-            )
-
+    cmds["sdist"] = VersioningitSdist
     cmds["build_py"] = VersioningitBuildPy
 
     return cmds
+
+class VersioningitSdist(sdist):  # type: ignore[valid-type,misc]
+    def make_release_tree(self, base_dir: str, files: Any) -> None:
+        super().make_release_tree(base_dir, files)
+        init_logging()
+        PROJECT_ROOT = Path().resolve()
+        log.debug("Running onbuild step; cwd=%s", PROJECT_ROOT)
+        run_onbuild(
+            project_dir=PROJECT_ROOT,
+            build_dir=base_dir,
+            is_source=True,
+            version=self.distribution.get_version(),
+        )
+
+class VersioningitBuildPy(build_py):  # type: ignore[valid-type,misc]
+    def run(self) -> None:
+        super().run()
+        init_logging()
+        PROJECT_ROOT = Path().resolve()
+        log.debug("Running onbuild step; cwd=%s", PROJECT_ROOT)
+        run_onbuild(
+            project_dir=PROJECT_ROOT,
+            build_dir=self.build_lib,
+            is_source=False,
+            version=self.distribution.get_version(),
+        )
