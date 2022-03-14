@@ -44,7 +44,7 @@ __author_email__ = "versioningit@varonathe.org"
 __license__ = "MIT"
 __url__ = "https://github.com/jwodder/versioningit"
 
-from .cmdclasses import get_cmdclasses
+from .cmdclasses import get_cmdclasses, VersioningitSdist, VersioningitBuildPy
 from .core import (
     VCSDescription,
     Versioningit,
@@ -77,6 +77,8 @@ __all__ = [
     "NotVersioningitError",
     "VCSDescription",
     "Versioningit",
+    "VersioningitSdist",
+    "VersioningitBuildPy",
     "get_cmdclasses",
     "get_next_version",
     "get_version",
